@@ -7,7 +7,7 @@ body:
   - type: dropdown
     id: target-env
     attributes:
-      #label: target environment
+      label: target environment
       options:
         - dev
         - test
@@ -17,7 +17,7 @@ body:
   - type: input
     id: catalog-name
     attributes:
-      #label: Catalog Name
+      label: Catalog Name
       description: catalog names. letter, number and underscore only
     validations:
       required: true
@@ -25,13 +25,13 @@ body:
   - type: textarea
     id: description
     attributes:
-      #label: description
+      label: description
       placeholder: test textarea
 
   - type: checkboxes
     id: userlist
     attributes:
-      #label: selected users
+      label: selected users
       options:
         - label: user1
         - label: user2
