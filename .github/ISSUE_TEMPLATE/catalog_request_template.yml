@@ -1,0 +1,38 @@
+name: Catalog Schema Request
+description: Request new catalog/schema
+title: "test issue forms "
+labels: [catalog, schema]
+
+body:
+  - type: dropdown
+    id: target-env
+    attributes:
+      label: target environment
+      options:
+        - dev
+        - test
+        - prod
+        - sandbox
+
+  - type: input
+    id: catalog-name
+    attributes:
+      label: Catalog Name
+      description: catalog names. letter, number and underscore only
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: description
+      placeholder: test textarea
+
+  - type: checkboxes
+    id: userlist
+    attributes:
+      label: selected users
+      options:
+        - user1
+        - user2
+        - someone_else

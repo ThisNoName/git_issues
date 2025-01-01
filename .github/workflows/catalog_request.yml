@@ -1,0 +1,21 @@
+name: catalog_request
+run-name: processing catalog request form
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  issue_form_test:
+    name: test github issue form
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v4
+
+      - name: Parse issue form data
+        id: parse
+        run: |
+          # Extract the issue body as JSON
+          ISSUE_BODY='${{ toJson(github.event.issue.body) }}'
+          echo "ISSUE_BODY"
