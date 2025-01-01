@@ -16,6 +16,17 @@ jobs:
       - name: Parse issue form data
         id: parse
         run: |
-          # Extract the issue body as JSON
-          ISSUE_BODY='${{ toJson(github.event.issue.body) }}'
-          echo "ISSUE_BODY"
+             # Extract the issue body as JSON
+             ISSUE_BODY='${{ toJson(github.event.issue.body) }}'
+             
+             echo json result
+             echo "$ISSUE_BODY"
+             
+             # Use jq to convert JSON to YAML
+             echo "$ISSUE_BODY" | jq -r '
+               to_entries | .[] | 
+               "\(.key): \(.value | if type == "string" then . else tostring end)"
+             ' > issue_data.yaml
+             
+             # Optionally, print the YAML file
+             cat issue_data.yaml
