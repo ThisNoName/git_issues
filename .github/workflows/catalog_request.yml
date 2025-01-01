@@ -16,16 +16,32 @@ jobs:
       - name: Parse issue form data
         id: parse
         run: |
-             # Extract the issue body as JSON
-             ISSUE_BODY=${{ toJson(github.event.issue.body) }}
+             # Extract the issue body
+             ISSUE_BODY='${{ github.event.issue.body }}'
              
-             echo json result
-             echo "$ISSUE_BODY"
-             
-             # Use jq to convert JSON to YAML
-             echo "$ISSUE_BODY" | jq -r '
-               to_entries | .[] | 
-               "\(.key): \(.value | if type == "string" then . else tostring end)"
+             # Convert markdown to YAML
+             echo "$ISSUE_BODY" | awk '
+             BEGIN { FS="\n"; OFS="\n" }
+             {
+               if ($0 ~ /^### /) {
+                 key = substr($0, 5)
+                 gsub(/^[ \t]+|[ \t]+$/, "", key)
+                 key = tolower(key)
+                 gsub(/ /, "_", key)
+                 printf "%s: ", key
+               } else if ($0 ~ /^- \[(X| )\]/) {
+                 if (!seen_checkbox) {
+                   printf "selected_users:\n"
+                   seen_checkbox = 1
+                 }
+                 value = substr($0, 7)
+                 gsub(/^[ \t]+|[ \t]+$/, "", value)
+                 printf "  - %s\n", value
+               } else if ($0 ~ /^[^#]/ && $0 !~ /^[ \t]*$/) {
+                 gsub(/^[ \t]+|[ \t]+$/, "", $0)
+                 print $0
+               }
+             }
              ' > issue_data.yaml
              
              # Optionally, print the YAML file
