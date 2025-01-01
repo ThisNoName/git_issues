@@ -13,36 +13,15 @@ jobs:
       - name: checkout source
         uses: actions/checkout@v4
 
+      - uses: ./.github/actions/issue_parser
+        id: issue_parser
+        with:
+          template-path: .github/ISSUE_TEMPLATE/catalog_request_template.yml
+
       - name: Parse issue form data
         id: parse
+#        env:
+#          form_data: ${{ steps.issue_parser.outputs.jsonString }}
         run: |
-             # Extract the issue body
-             ISSUE_BODY='${{ github.event.issue.body }}'
-             
-             # Convert markdown to YAML
-             echo "$ISSUE_BODY" | awk '
-             BEGIN { FS="\n"; OFS="\n" }
-             {
-               if ($0 ~ /^### /) {
-                 key = substr($0, 5)
-                 gsub(/^[ \t]+|[ \t]+$/, "", key)
-                 key = tolower(key)
-                 gsub(/ /, "_", key)
-                 printf "%s: ", key
-               } else if ($0 ~ /^- \[(X| )\]/) {
-                 if (!seen_checkbox) {
-                   printf "selected_users:\n"
-                   seen_checkbox = 1
-                 }
-                 value = substr($0, 7)
-                 gsub(/^[ \t]+|[ \t]+$/, "", value)
-                 printf "  - %s\n", value
-               } else if ($0 ~ /^[^#]/ && $0 !~ /^[ \t]*$/) {
-                 gsub(/^[ \t]+|[ \t]+$/, "", $0)
-                 print $0
-               }
-             }
-             ' > issue_data.yaml
-             
-             # Optionally, print the YAML file
-             cat issue_data.yaml
+             formdata=${{ steps.issue_parser.outputs.jsonString }}
+              echo $formdata
