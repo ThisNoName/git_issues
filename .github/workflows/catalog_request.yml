@@ -23,5 +23,5 @@ jobs:
 #        env:
 #          form_data: ${{ steps.issue_parser.outputs.jsonString }}
         run: |
-             formdata=${{ steps.issue_parser.outputs.jsonString }}
-              echo "$formdata"
+             formdata="${{ steps.issue_parser.outputs.jsonString }}"
+              echo $formdata
