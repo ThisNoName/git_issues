@@ -17,7 +17,7 @@ jobs:
         id: parse
         run: |
              # Extract the issue body as JSON
-             ISSUE_BODY='${{ toJson(github.event.issue.body) }}'
+             ISSUE_BODY=${{ toJson(github.event.issue.body) }}
              
              echo json result
              echo "$ISSUE_BODY"
