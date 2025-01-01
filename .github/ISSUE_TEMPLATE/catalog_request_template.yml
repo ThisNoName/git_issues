@@ -33,6 +33,6 @@ body:
     attributes:
       label: selected users
       options:
-        - user1
-        - user2
-        - someone_else
+        - label: user1
+        - label: user2
+        - label: someone_else
